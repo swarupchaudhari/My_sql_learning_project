@@ -1,0 +1,18 @@
+-- Movie Profit Analysis -- 
+This query calculates movie profit in MILLIONS (profit_mln) -- regardless of whether the original data is in thousands, millions, or billions.
+
+SELECT 
+m.movie_id,
+ m.title,
+ f.budget,
+ f.revenue,
+ f.currency,
+ f.unit,
+   CASE WHEN f.unit = 'thousands' THEN     ROUND((f.revenue - f.budget) / 1000, 1)
+   WHEN f.unit = 'billions'  THEN   ROUND((f.revenue - f.budget) * 1000, 1) 
+   ELSE ROUND((f.revenue - f.budget), 1)
+   END AS profit_mln FROM movies m JOIN financials f ON m.movie_id = f.movie_id;
+WHERE industry = "bollywood"
+ORDER BY profit_mln DESC;
+
+-- profit_mln: Profit converted into millions for easy comparison
