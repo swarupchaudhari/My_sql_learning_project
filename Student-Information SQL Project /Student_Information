@@ -84,5 +84,21 @@ INSERT INTO courses VALUES
 (9,'Java Programming','Programming',5500),
 (10,'Machine Learning','AI',9000);
 
+/*
+Table: enrollments
+
+Stores enrollment records.
+
+Each enrollment links:
+Student → Course
+*/
+
+CREATE TABLE enrollments (
+    enrollment_id INT PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    enrollment_date DATE,
+    status VARCHAR(20)
+);
 
 
