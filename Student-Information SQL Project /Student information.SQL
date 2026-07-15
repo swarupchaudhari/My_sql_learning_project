@@ -1,0 +1,187 @@
+create database student_information;
+use student_information;
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    full_name VARCHAR(100),
+    city VARCHAR(50),
+    age INT,
+    registration_date DATE
+);
+INSERT INTO students VALUES
+(1,'Amit Sharma','Delhi',22,'2023-01-10'),
+(2,'Neha Verma','Mumbai',25,'2023-01-15'),
+(3,'Rahul Mehta','Pune',28,'2023-01-20'),
+(4,'Sneha Patil','Bangalore',24,'2023-02-01'),
+(5,'Karan Singh','Jaipur',30,'2023-02-05'),
+(6,'Pooja Nair','Chennai',26,'2023-02-10'),
+(7,'Rohit Gupta','Delhi',27,'2023-02-15'),
+(8,'Anjali Deshmukh','Nagpur',23,'2023-02-18'),
+(9,'Vikas Jain','Indore',29,'2023-02-20'),
+(10,'Priya Kulkarni','Pune',24,'2023-02-25'),
+(11,'Nikhil Patil','Mumbai',28,'2023-03-01'),
+(12,'Komal Shah','Ahmedabad',26,'2023-03-05'),
+(13,'Arjun Malhotra','Delhi',31,'2023-03-10'),
+(14,'Meera Iyer','Chennai',25,'2023-03-12'),
+(15,'Suresh Reddy','Hyderabad',32,'2023-03-15'),
+(16,'Riya Sen','Kolkata',22,'2023-03-18'),
+(17,'Manish Yadav','Noida',27,'2023-03-20'),
+(18,'Aakash Mishra','Bhopal',24,'2023-03-25'),
+(19,'Divya Joshi','Udaipur',26,'2023-03-28'),
+(20,'Harsh Agrawal','Gwalior',29,'2023-04-01'),
+(21,'Payal Verma','Delhi',23,'2023-04-05'),
+(22,'Deepak Rana','Dehradun',31,'2023-04-08'),
+(23,'Shalini Kapoor','Chandigarh',28,'2023-04-10'),
+(24,'Yash Thakur','Indore',25,'2023-04-12'),
+(25,'Isha Bansal','Delhi',22,'2023-04-15'),
+(26,'Mohit Arora','Faridabad',30,'2023-04-18'),
+(27,'Neeraj Sinha','Patna',33,'2023-04-20'),
+(28,'Swati Rao','Bangalore',27,'2023-04-22'),
+(29,'Rakesh Das','Guwahati',35,'2023-04-25'),
+(30,'Kavita Pawar','Nashik',24,'2023-04-28');
+
+
+CREATE TABLE courses (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(100),
+    category VARCHAR(50),
+    price INT
+);
+INSERT INTO courses VALUES
+(1,'SQL for Beginners','Data',3000),
+(2,'Advanced SQL','Data',4500),
+(3,'Python Programming','Programming',5000),
+(4,'Data Analysis with Python','Data',6000),
+(5,'Power BI','Analytics',4000),
+(6,'Tableau','Analytics',4500),
+(7,'Excel Mastery','Analytics',2000),
+(8,'Web Development','Development',6500),
+(9,'Java Programming','Programming',5500),
+(10,'Machine Learning','AI',9000);
+
+
+
+CREATE TABLE enrollments (
+    enrollment_id INT PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    enrollment_date DATE,
+    status VARCHAR(20)
+);
+INSERT INTO enrollments VALUES
+(1,1,1,'2023-01-12','Completed'),
+(2,1,3,'2023-01-20','Completed'),
+(3,2,1,'2023-01-18','Completed'),
+(4,2,5,'2023-02-01','In Progress'),
+(5,3,4,'2023-02-05','Completed'),
+(6,4,6,'2023-02-10','Completed'),
+(7,5,8,'2023-02-15','Dropped'),
+(8,6,7,'2023-02-18','Completed'),
+(9,7,2,'2023-02-20','In Progress'),
+(10,8,1,'2023-02-22','Completed'),
+(11,9,9,'2023-02-25','Completed'),
+(12,10,5,'2023-03-01','Completed'),
+(13,11,3,'2023-03-05','Completed'),
+(14,12,4,'2023-03-08','Completed'),
+(15,13,10,'2023-03-10','In Progress'),
+(16,14,6,'2023-03-12','Completed'),
+(17,15,8,'2023-03-15','Completed'),
+(18,16,7,'2023-03-18','Completed'),
+(19,17,2,'2023-03-20','In Progress'),
+(20,18,1,'2023-03-22','Completed'),
+(21,19,5,'2023-03-25','Completed'),
+(22,20,9,'2023-03-28','Completed'),
+(23,21,3,'2023-04-01','Completed'),
+(24,22,4,'2023-04-03','In Progress'),
+(25,23,6,'2023-04-05','Completed'),
+(26,24,7,'2023-04-08','Completed'),
+(27,25,1,'2023-04-10','Completed'),
+(28,26,8,'2023-04-12','Dropped'),
+(29,27,10,'2023-04-15','In Progress'),
+(30,28,5,'2023-04-18','Completed');
+
+CREATE TABLE payments (
+    payment_id INT PRIMARY KEY,
+    enrollment_id INT,
+    payment_date DATE,
+    amount INT,
+    payment_mode VARCHAR(30)
+);
+
+INSERT INTO payments VALUES
+(1,1,'2023-01-12',3000,'UPI'),
+(2,2,'2023-01-20',5000,'Card'),
+(3,3,'2023-01-18',3000,'UPI'),
+(4,4,'2023-02-01',4000,'Net Banking'),
+(5,5,'2023-02-05',6000,'Card'),
+(6,6,'2023-02-10',4500,'UPI'),
+(7,7,'2023-02-15',6500,'Card'),
+(8,8,'2023-02-18',2000,'UPI'),
+(9,9,'2023-02-20',4500,'Net Banking'),
+(10,10,'2023-02-22',3000,'UPI'),
+(11,11,'2023-02-25',5500,'Card'),
+(12,12,'2023-03-01',4000,'UPI'),
+(13,13,'2023-03-05',5000,'Net Banking'),
+(14,14,'2023-03-08',6000,'Card'),
+(15,15,'2023-03-10',9000,'UPI'),
+(16,16,'2023-03-12',4500,'Card'),
+(17,17,'2023-03-15',6500,'UPI'),
+(18,18,'2023-03-18',2000,'Net Banking'),
+(19,19,'2023-03-20',4500,'Card'),
+(20,20,'2023-03-22',3000,'UPI'),
+(21,21,'2023-03-25',4000,'Card'),
+(22,22,'2023-03-28',5500,'UPI'),
+(23,23,'2023-04-01',5000,'Net Banking'),
+(24,24,'2023-04-03',6000,'Card'),
+(25,25,'2023-04-05',4500,'UPI'),
+(26,26,'2023-04-08',2000,'Card'),
+(27,27,'2023-04-10',3000,'UPI'),
+(28,28,'2023-04-12',6500,'Net Banking'),
+(29,29,'2023-04-15',9000,'Card'),
+(30,30,'2023-04-18',4000,'UPI');
+
+#checking count of tables
+select count(*) from courses;
+select count(*) from enrollments;
+select count(*) from payments;
+select count(*) from students;
+
+#BASIC LEVEL (1-15)
+select * from students where city = "Delhi";
+select count(student_id) from students;
+select * from courses where price > 5000;
+select distinct city from students;
+select count(*) from students where registration_date between '2023-03-01' AND '2023-03-31';
+select * from students where age >= 25;
+select * from courses where category = "Data";
+select * from students order by age desc;
+select * from enrollments where status = "Completed";
+select count(enrollment_id) from enrollments;
+select * from payments where payment_mode = 'UPI';
+select max(price) as max_course_price, min(price) as min_course_price, avg(price) as average_price from courses;
+select * from students where registration_date > '2023-04-01';
+SELECT COUNT(*) FROM courses;
+SELECT * FROM enrollments WHERE enrollment_date BETWEEN '2023-02-01' AND '2023-02-28';
+
+#INTERMEDIATE LEVEL (16-35)
+SELECT course_id, COUNT(*) AS total_enrollments FROM enrollments GROUP BY course_id;
+SELECT c.course_name, COUNT(e.enrollment_id) AS enrollments FROM courses c JOIN enrollments e ON c.course_id = e.course_id GROUP BY c.course_name;
+SELECT SUM(amount) AS total_revenue FROM payments;
+SELECT c.course_name, SUM(p.amount) AS revenue FROM courses c JOIN enrollments e ON c.course_id = e.course_id JOIN payments p ON e.enrollment_id = p.enrollment_id GROUP BY c.course_name;
+SELECT MONTH(payment_date) AS month, SUM(amount) AS revenue FROM payments GROUP BY MONTH(payment_date);
+SELECT student_id, COUNT(*) AS total_courses FROM enrollments GROUP BY student_id HAVING COUNT(*) > 1;
+SELECT s.* FROM students s LEFT JOIN enrollments e ON s.student_id = e.student_id WHERE e.student_id IS NULL;
+SELECT * FROM courses ORDER BY price DESC LIMIT 1;
+SELECT city, AVG(age) AS avg_age FROM students GROUP BY city;
+SELECT s.full_name, c.course_name FROM students s JOIN enrollments e ON s.student_id = e.student_id JOIN courses c ON e.course_id = c.course_id;
+SELECT course_id FROM enrollments GROUP BY course_id HAVING COUNT(*) >= 3;
+SELECT payment_mode, SUM(amount) AS total_amount FROM payments GROUP BY payment_mode;
+SELECT student_id FROM enrollments GROUP BY student_id HAVING SUM(status <> 'Completed') = 0;
+SELECT course_id FROM enrollments GROUP BY course_id HAVING SUM(status='Dropped') = 0;
+
+#ADVANCED LEVEL (36-50)
+SELECT c.course_name, SUM(p.amount) AS revenue FROM courses c JOIN enrollments e ON c.course_id = e.course_id JOIN payments p ON e.enrollment_id = p.enrollment_id GROUP BY c.course_name ORDER BY revenue DESC LIMIT 3;
+SELECT course_id, COUNT(*) AS total_enrollments, RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_no FROM enrollments GROUP BY course_id;
+SELECT e.student_id, SUM(p.amount) AS total_spent, RANK() OVER (ORDER BY SUM(p.amount) DESC) AS rank_no FROM enrollments e JOIN payments p ON e.enrollment_id = p.enrollment_id GROUP BY e.student_id;
+SELECT student_id FROM enrollments GROUP BY student_id HAVING SUM(status <> 'Completed') = 0;
+SELECT course_id FROM enrollments GROUP BY course_id HAVING SUM(status='Dropped') = 0;
+SELECT e.student_id, SUM(p.amount) AS total_spent FROM enrollments e JOIN payments p ON e.enrollment_id = p.enrollment_id GROUP BY e.student_id HAVING total_spent > 10000;
