@@ -52,3 +52,37 @@ INSERT INTO students VALUES
 (28,'Swati Rao','Bangalore',27,'2023-04-22'),
 (29,'Rakesh Das','Guwahati',35,'2023-04-25'),
 (30,'Kavita Pawar','Nashik',24,'2023-04-28');
+
+/*
+Table: courses
+
+Stores all course information.
+*/
+
+CREATE TABLE courses (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(100),
+    category VARCHAR(50),
+    price INT
+);
+
+CREATE TABLE courses (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(100),
+    category VARCHAR(50),
+    price INT
+);
+INSERT INTO courses VALUES
+(1,'SQL for Beginners','Data',3000),
+(2,'Advanced SQL','Data',4500),
+(3,'Python Programming','Programming',5000),
+(4,'Data Analysis with Python','Data',6000),
+(5,'Power BI','Analytics',4000),
+(6,'Tableau','Analytics',4500),
+(7,'Excel Mastery','Analytics',2000),
+(8,'Web Development','Development',6500),
+(9,'Java Programming','Programming',5500),
+(10,'Machine Learning','AI',9000);
+
+
+
