@@ -134,3 +134,17 @@ INSERT INTO enrollments VALUES
 (30,28,5,'2023-04-18','Completed');
 
 
+
+/*
+Table: payments
+
+Stores payment information for enrollments.
+*/
+
+CREATE TABLE payments (
+    payment_id INT PRIMARY KEY,
+    enrollment_id INT,
+    payment_date DATE,
+    amount INT,
+    payment_mode VARCHAR(30)
+);
