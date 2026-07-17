@@ -256,6 +256,69 @@ FROM enrollments
 WHERE enrollment_date BETWEEN '2023-02-01' AND '2023-02-28';
 
 
+/*
+Business Question:
+Which students belong to Delhi?
+
+Purpose:
+Useful for city-wise student analysis.
+*/
+
+SELECT *
+FROM students
+WHERE city = 'Delhi';
+
+/*
+Business Question:
+How many students are registered?
+*/
+
+SELECT COUNT(student_id) AS total_students
+FROM students;
+
+/*
+Business Question:
+Which premium courses cost more than ₹5000?
+*/
+
+SELECT *
+FROM courses
+WHERE price > 5000;
+
+/*
+Business Question:
+From which cities do students come?
+*/
+
+SELECT DISTINCT city
+FROM students;
+
+/*
+Business Question:
+How much revenue has each course generated?
+*/
+
+SELECT
+    c.course_name,
+    SUM(p.amount) AS revenue
+FROM courses c
+JOIN enrollments e
+    ON c.course_id = e.course_id
+JOIN payments p
+    ON e.enrollment_id = p.enrollment_id
+GROUP BY c.course_name;
+
+/*
+Business Question:
+What is the monthly revenue trend?
+*/
+
+SELECT
+    MONTH(payment_date) AS month,
+    SUM(amount) AS revenue
+FROM payments
+GROUP BY MONTH(payment_date);
+
 
 
 
