@@ -236,7 +236,24 @@ select count(enrollment_id) from enrollments;
 select * from payments
 where payment_mode = 'UPI';
 
+#Find the minimum, maximum, and average course price.
+select
+max(price) as max_course_price,
+min(price) as min_course_price,
+avg(price) as average_price
+from courses;
 
+#Show students who registered after 1st April 2023.
+select * from students
+where registration_date > 2023-04-01;
+
+#Count how many courses are available in total.
+SELECT COUNT(*) FROM courses;
+
+#List enrollments done in February 2023.
+SELECT * 
+FROM enrollments
+WHERE enrollment_date BETWEEN '2023-02-01' AND '2023-02-28';
 
 
 
