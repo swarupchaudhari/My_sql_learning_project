@@ -179,3 +179,67 @@ INSERT INTO payments VALUES
 (28,28,'2023-04-12',6500,'Net Banking'),
 (29,29,'2023-04-15',9000,'Card'),
 (30,30,'2023-04-18',4000,'UPI');
+
+
+
+
+select * from courses;
+select * from enrollments;
+select * from payments;
+select * from students;
+
+#checking count of tables
+select count(*) from courses;
+select count(*) from enrollments;
+select count(*) from payments;
+select count(*) from students;
+
+#🟢 BASIC LEVEL (1–15)
+#Retrieve all students from Delhi.
+select * from students
+where city = "Delhi"; 
+
+#Find the total number of students.
+select count(student_id) from students;
+
+#List all courses that cost more than ₹5,000.
+select * from courses
+where price > 5000;
+
+#Display distinct cities of students.
+select distinct city from students;
+
+#Count how many students registered in March 2023.
+select count(*) from students
+where registration_date between '2023-03-01' AND '2023-03-31';
+
+#Show students aged 25 or above.
+select * from students
+where age >= 25;
+
+#List all courses under the Data category.
+select * from courses 
+where category = "Data";
+
+#Sort students by age (descending).
+select * from students
+order by age desc;
+
+#Find all enrollments with status Completed.
+select  * from enrollments
+where status = "completed";
+
+#Count total enrollments.
+select count(enrollment_id) from enrollments;
+
+#Display all payments made via UPI.
+select * from payments
+where payment_mode = 'UPI';
+
+
+
+
+
+
+
+
