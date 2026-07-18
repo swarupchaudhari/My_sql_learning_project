@@ -487,5 +487,48 @@ SELECT
 FROM payments
 GROUP BY MONTH(payment_date);
 
+/*
+Business Question:
+Which courses generate the highest revenue?
+*/
+
+SELECT
+    c.course_name,
+    SUM(p.amount) AS revenue
+FROM courses c
+JOIN enrollments e
+    ON c.course_id = e.course_id
+JOIN payments p
+    ON e.enrollment_id = p.enrollment_id
+GROUP BY c.course_name
+ORDER BY revenue DESC
+LIMIT 3;
+
+
+/*
+SUM()       → Total Revenue
+GROUP BY    → Per Course
+ORDER BY    → Highest Revenue First
+LIMIT 3     → Top 3 Courses
+*/
+
+
+/*
+Business Question:
+Which courses are most popular?
+*/
+
+SELECT
+    course_id,
+    COUNT(*) AS total_enrollments,
+
+    RANK() OVER(
+        ORDER BY COUNT(*) DESC
+    ) AS rank_no
+
+FROM enrollments
+GROUP BY course_id;
+
+
 
 
