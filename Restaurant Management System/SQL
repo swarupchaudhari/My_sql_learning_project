@@ -1,2 +1,10 @@
+
 CREATE DATABASE Restaurant;
 USE Restaurant;
+
+
+
+customer_id
+item_id
+order_id
+payment_id
