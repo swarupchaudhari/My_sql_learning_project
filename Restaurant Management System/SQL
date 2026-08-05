@@ -12,3 +12,15 @@ payment_id
 
 FOREIGN KEY(customer_id)
 REFERENCES Customers(customer_id)
+
+
+
+
+INSERT INTO Restaurant
+customer_id,
+item_id,
+order_id,
+payment_id
+
+
+
