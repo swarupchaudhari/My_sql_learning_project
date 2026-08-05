@@ -26,3 +26,6 @@ payment_id
 SELECT * FROM Restaurant;
 
 
+WHERE city='Pune'
+
+
