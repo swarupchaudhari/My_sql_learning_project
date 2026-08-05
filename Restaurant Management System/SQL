@@ -23,4 +23,6 @@ order_id,
 payment_id
 
 
+SELECT * FROM Restaurant;
+
 
