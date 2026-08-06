@@ -28,4 +28,6 @@ SELECT * FROM Restaurant;
 
 WHERE city='Pune'
 
+ORDER BY price DESC
+
 
