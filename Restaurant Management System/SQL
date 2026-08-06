@@ -30,4 +30,6 @@ WHERE city='Pune'
 
 ORDER BY price DESC
 
+ORDER BY price ASC
+
 
