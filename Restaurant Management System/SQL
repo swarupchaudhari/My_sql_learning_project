@@ -36,4 +36,5 @@ INNER JOIN
 
 
 SUM(amount)
-
+.
+COUNT(*)
