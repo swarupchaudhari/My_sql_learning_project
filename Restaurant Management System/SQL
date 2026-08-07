@@ -35,3 +35,5 @@ ORDER BY price ASC
 INNER JOIN
 
 
+SUM(amount)
+
