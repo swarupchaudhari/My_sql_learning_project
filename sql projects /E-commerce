@@ -1,0 +1,142 @@
+1.E-commerce Sales Analysis
+
+Dataset: data-to-insights.ecommerce.all_sessions
+
+Q1. Which cities generated the highest total revenue?
+
+SELECT
+city,
+ROUND(SUM(totalTransactionRevenue) / 1000000, 2) AS revenue_million
+FROM data-to-insights.ecommerce.all_sessions
+WHERE totalTransactionRevenue IS NOT NULL
+GROUP BY city
+ORDER BY revenue_million DESC
+LIMIT 10;
+
+What it does: Groups transactions by city and calculates total revenue.
+
+Q2. What are the top 10 products by units sold?
+
+SELECT
+v2ProductName AS product_name,
+SUM(productQuantity) AS units_sold
+FROM data-to-insights.ecommerce.all_sessions
+WHERE productQuantity IS NOT NULL
+GROUP BY product_name
+ORDER BY units_sold DESC
+LIMIT 10;
+
+Q3. What percentage of sessions resulted in a transaction?
+
+SELECT
+COUNT(DISTINCT fullVisitorId) AS total_sessions,
+COUNT(DISTINCT
+CASE
+WHEN transactions IS NOT NULL
+THEN fullVisitorId
+END
+) AS sessions_with_transaction,
+ROUND(
+COUNT(DISTINCT CASE WHEN transactions IS NOT NULL THEN fullVisitorId END)
+* 100.0 / COUNT(DISTINCT fullVisitorId),
+2
+) AS conversion_rate
+FROM data-to-insights.ecommerce.all_sessions;
+
+Q4. Which traffic channel has the highest conversion rate?
+
+SELECT
+channelGrouping,
+COUNT(DISTINCT fullVisitorId) AS total_sessions,
+COUNT(DISTINCT
+CASE
+WHEN transactions IS NOT NULL
+THEN fullVisitorId
+END
+) AS converted_sessions,
+ROUND(
+COUNT(DISTINCT CASE WHEN transactions IS NOT NULL THEN fullVisitorId END)
+* 100.0 / COUNT(DISTINCT fullVisitorId),
+2
+) AS conversion_rate
+FROM data-to-insights.ecommerce.all_sessions
+GROUP BY channelGrouping
+ORDER BY conversion_rate DESC;
+
+Q5. Which products generate the most revenue?
+
+SELECT
+v2ProductName AS product_name,
+ROUND(SUM(productRevenue) / 1000000, 2) AS revenue_million
+FROM data-to-insights.ecommerce.all_sessions
+WHERE productRevenue IS NOT NULL
+GROUP BY product_name
+ORDER BY revenue_million DESC
+LIMIT 10;
+
+Q6. What is the average transaction revenue by country?
+
+SELECT
+country,
+ROUND(
+AVG(totalTransactionRevenue) / 1000000,
+2
+) AS avg_revenue_million
+FROM data-to-insights.ecommerce.all_sessions
+WHERE totalTransactionRevenue IS NOT NULL
+GROUP BY country
+ORDER BY avg_revenue_million DESC;
+
+Q7. Find cities generating more than $10,000 revenue.
+
+SELECT
+city,
+ROUND(SUM(totalTransactionRevenue) / 1000000, 2) AS revenue_million
+FROM data-to-insights.ecommerce.all_sessions
+WHERE totalTransactionRevenue IS NOT NULL
+GROUP BY city
+HAVING SUM(totalTransactionRevenue) > 10000000
+ORDER BY revenue_million DESC;
+
+Q8. Rank products by revenue.
+
+SELECT
+v2ProductName AS product_name,
+SUM(productRevenue) AS revenue,
+RANK() OVER (
+ORDER BY SUM(productRevenue) DESC
+) AS revenue_rank
+FROM data-to-insights.ecommerce.all_sessions
+WHERE productRevenue IS NOT NULL
+GROUP BY product_name;
+
+Q9. Find the top 3 products in each category.
+
+WITH product_revenue AS (
+SELECT
+v2ProductCategory AS category,
+v2ProductName AS product_name,
+SUM(productRevenue) AS revenue
+FROM data-to-insights.ecommerce.all_sessions
+WHERE productRevenue IS NOT NULL
+GROUP BY category, product_name
+),
+
+ranked_products AS (
+SELECT
+*,
+ROW_NUMBER() OVER (
+PARTITION BY category
+ORDER BY revenue DESC
+) AS product_rank
+FROM product_revenue
+)
+
+SELECT *
+FROM ranked_products
+WHERE product_rank <= 3
+ORDER BY category, product_rank;
+
+
+
+
