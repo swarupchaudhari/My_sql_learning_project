@@ -1,0 +1,261 @@
+Financial Fraud Detection
+
+Assume:
+
+creditcard
+
+with:
+
+Time
+Amount
+Class
+V1 ... V28
+
+where:
+
+Class = 1 → Fraud
+Class = 0 → Legitimate
+
+Because this dataset anonymizes most customer/account information, some account-level questions from your original plan cannot be answered directly without an account identifier. Don't invent one.
+
+Q1. What percentage of transactions are fraudulent?
+
+SELECT
+COUNT(*) AS total_transactions,
+
+SUM(
+    CASE
+        WHEN Class = 1 THEN 1
+        ELSE 0
+    END
+) AS fraudulent_transactions,
+
+ROUND(
+    SUM(
+        CASE
+            WHEN Class = 1 THEN 1
+            ELSE 0
+        END
+    ) * 100.0 / COUNT(*),
+    4
+) AS fraud_percentage
+
+FROM creditcard;
+
+Q2. Compare average transaction amount for fraud vs legitimate.
+
+SELECT
+Class,
+
+COUNT(*) AS transactions,
+
+ROUND(AVG(Amount), 2) AS avg_amount,
+
+ROUND(MAX(Amount), 2) AS max_amount
+
+FROM creditcard
+
+GROUP BY Class;
+
+Q3. Find transactions above the overall average amount.
+
+SELECT
+Time,
+Amount,
+Class
+
+FROM creditcard
+
+WHERE Amount > (
+SELECT AVG(Amount)
+FROM creditcard
+)
+
+ORDER BY Amount DESC;
+
+Q4. Create a rule-based fraud flag.
+
+SELECT
+Time,
+Amount,
+Class,
+
+CASE
+    WHEN Amount > 1000
+    THEN 'High Risk'
+
+    WHEN Amount > 500
+    THEN 'Medium Risk'
+
+    ELSE 'Low Risk'
+END AS risk_level
+
+FROM creditcard;
+
+Q5. Create a fraud score.
+
+WITH rules AS (
+
+SELECT
+    Time,
+    Amount,
+    Class,
+
+    CASE
+        WHEN Amount > 1000 THEN 40
+        ELSE 0
+    END AS amount_score
+
+FROM creditcard
+
+)
+
+SELECT
+*,
+amount_score AS fraud_score,
+
+CASE
+    WHEN amount_score >= 40 THEN 'High'
+    WHEN amount_score >= 20 THEN 'Medium'
+    ELSE 'Low'
+END AS risk_level
+
+FROM rules;
+
+Q6. Calculate precision of your rule.
+
+For example, consider transactions above ₹1000 as suspicious.
+
+WITH flagged AS (
+
+SELECT
+    *,
+    CASE
+        WHEN Amount > 1000 THEN 1
+        ELSE 0
+    END AS predicted_fraud
+FROM creditcard
+
+)
+
+SELECT
+ROUND(
+SUM(
+CASE
+WHEN predicted_fraud = 1
+AND Class = 1
+THEN 1
+ELSE 0
+END
+) * 100.0
+/
+NULLIF(
+SUM(
+CASE
+WHEN predicted_fraud = 1
+THEN 1
+ELSE 0
+END
+),
+0
+),
+2
+) AS precision_percentage
+
+FROM flagged;
+
+Q7. Calculate recall.
+
+WITH flagged AS (
+
+SELECT
+    *,
+    CASE
+        WHEN Amount > 1000 THEN 1
+        ELSE 0
+    END AS predicted_fraud
+FROM creditcard
+
+)
+
+SELECT
+ROUND(
+SUM(
+CASE
+WHEN predicted_fraud = 1
+AND Class = 1
+THEN 1
+ELSE 0
+END
+) * 100.0
+/
+NULLIF(
+SUM(
+CASE
+WHEN Class = 1
+THEN 1
+ELSE 0
+END
+),
+0
+),
+2
+) AS recall_percentage
+
+FROM flagged;
+
+Q8. Build a multi-rule fraud scoring system.
+
+WITH fraud_rules AS (
+
+SELECT
+    Time,
+    Amount,
+    Class,
+
+    CASE
+        WHEN Amount > 1000 THEN 40
+        ELSE 0
+    END AS amount_rule,
+
+    CASE
+        WHEN Amount > 500 THEN 20
+        ELSE 0
+    END AS high_value_rule,
+
+    CASE
+        WHEN Amount = 0 THEN 10
+        ELSE 0
+    END AS zero_amount_rule
+
+FROM creditcard
+
+),
+
+fraud_score AS (
+
+SELECT
+    *,
+    amount_rule
+    + high_value_rule
+    + zero_amount_rule AS total_score
+
+FROM fraud_rules
+
+)
+
+SELECT
+Time,
+Amount,
+Class,
+total_score,
+
+CASE
+    WHEN total_score >= 50 THEN 'High Risk'
+    WHEN total_score >= 20 THEN 'Medium Risk'
+    ELSE 'Low Risk'
+END AS risk_level
+
+FROM fraud_score
+
+ORDER BY total_score DESC;
