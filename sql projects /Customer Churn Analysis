@@ -1,0 +1,169 @@
+Customer Churn Analysis
+
+For the Telco Customer Churn dataset, assume the imported table is:
+
+telco_churn
+
+Important columns include:
+
+customerID
+gender
+SeniorCitizen
+Partner
+Dependents
+tenure
+PhoneService
+InternetService
+Contract
+MonthlyCharges
+TotalCharges
+Churn
+
+Q1. What percentage of customers churned?
+
+SELECT
+COUNT() AS total_customers,
+SUM(CASE WHEN "Churn" = 'Yes' THEN 1 ELSE 0 END) AS churned_customers,
+ROUND(
+SUM(CASE WHEN "Churn" = 'Yes' THEN 1 ELSE 0 END) * 100.0
+/ COUNT(),
+2
+) AS churn_rate
+FROM telco_churn;
+
+Q2. Which contract type has the highest churn rate?
+
+SELECT
+"Contract",
+COUNT() AS total_customers,
+SUM(CASE WHEN "Churn" = 'Yes' THEN 1 ELSE 0 END) AS churned,
+ROUND(
+SUM(CASE WHEN "Churn" = 'Yes' THEN 1 ELSE 0 END)
+* 100.0 / COUNT(),
+2
+) AS churn_rate
+FROM telco_churn
+GROUP BY "Contract"
+ORDER BY churn_rate DESC;
+
+Q3. Compare average monthly charges of churned and retained customers.
+
+SELECT
+"Churn",
+ROUND(AVG("MonthlyCharges"), 2) AS avg_monthly_charge
+FROM telco_churn
+GROUP BY "Churn";
+
+Q4. Are customers with less than 12 months tenure more likely to churn?
+
+SELECT
+CASE
+WHEN tenure < 12 THEN 'Less than 12 months'
+ELSE '12+ months'
+END AS tenure_group,
+
+COUNT(*) AS customers,
+
+SUM(CASE WHEN "Churn" = 'Yes' THEN 1 ELSE 0 END) AS churned,
+
+ROUND(
+    SUM(CASE WHEN "Churn" = 'Yes' THEN 1 ELSE 0 END)
+    * 100.0 / COUNT(*),
+    2
+) AS churn_rate
+
+FROM telco_churn
+GROUP BY tenure_group
+ORDER BY churn_rate DESC;
+
+Q5. Which internet service has the highest churn?
+
+SELECT
+"InternetService",
+COUNT(*) AS customers,
+SUM(CASE WHEN "Churn" = 'Yes' THEN 1 ELSE 0 END) AS churned,
+
+ROUND(
+    SUM(CASE WHEN "Churn" = 'Yes' THEN 1 ELSE 0 END)
+    * 100.0 / COUNT(*),
+    2
+) AS churn_rate
+
+FROM telco_churn
+GROUP BY "InternetService"
+ORDER BY churn_rate DESC;
+
+Q6. Which customer segment has the highest churn?
+
+SELECT
+"SeniorCitizen",
+COUNT(*) AS customers,
+SUM(CASE WHEN "Churn" = 'Yes' THEN 1 ELSE 0 END) AS churned,
+
+ROUND(
+    SUM(CASE WHEN "Churn" = 'Yes' THEN 1 ELSE 0 END)
+    * 100.0 / COUNT(*),
+    2
+) AS churn_rate
+
+FROM telco_churn
+GROUP BY "SeniorCitizen"
+ORDER BY churn_rate DESC;
+
+Q7. Identify high-risk customers.
+
+SELECT
+"customerID",
+tenure,
+"MonthlyCharges",
+"Contract",
+"InternetService",
+
+CASE
+    WHEN tenure < 12
+         AND "MonthlyCharges" > 70
+         AND "Contract" = 'Month-to-month'
+    THEN 'High'
+
+    WHEN tenure < 24
+         AND "MonthlyCharges" > 50
+    THEN 'Medium'
+
+    ELSE 'Low'
+END AS churn_risk
+
+FROM telco_churn
+WHERE "Churn" = 'No';
+
+This is a very good CASE WHEN business-rule project.
+
+Q8. Count customers by churn-risk category.
+
+WITH customer_risk AS (
+SELECT
+"customerID",
+
+    CASE
+        WHEN tenure < 12
+             AND "MonthlyCharges" > 70
+             AND "Contract" = 'Month-to-month'
+        THEN 'High'
+
+        WHEN tenure < 24
+             AND "MonthlyCharges" > 50
+        THEN 'Medium'
+
+        ELSE 'Low'
+    END AS risk
+FROM telco_churn
+WHERE "Churn" = 'No'
+
+)
+
+SELECT
+risk,
+COUNT(*) AS customers
+FROM customer_risk
+GROUP BY risk
+ORDER BY customers DESC;
+
