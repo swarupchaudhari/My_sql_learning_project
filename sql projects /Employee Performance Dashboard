@@ -1,0 +1,182 @@
+Employee Performance Dashboard
+
+Assume table:
+
+employees
+
+with columns such as:
+
+Department
+JobRole
+MonthlyIncome
+PerformanceRating
+YearsAtCompany
+Attrition
+EmployeeNumber
+
+Q1. Rank employees by salary within each department.
+
+SELECT
+EmployeeNumber,
+Department,
+JobRole,
+MonthlyIncome,
+
+RANK() OVER (
+    PARTITION BY Department
+    ORDER BY MonthlyIncome DESC
+) AS salary_rank
+
+FROM employees;
+
+Q2. Calculate average salary by department.
+
+SELECT
+Department,
+ROUND(AVG(MonthlyIncome), 2) AS avg_salary
+FROM employees
+GROUP BY Department
+ORDER BY avg_salary DESC;
+
+Q3. Compare each employee's salary with department average.
+
+SELECT
+EmployeeNumber,
+Department,
+MonthlyIncome,
+
+ROUND(
+    AVG(MonthlyIncome) OVER (
+        PARTITION BY Department
+    ),
+    2
+) AS department_avg_salary,
+
+ROUND(
+    MonthlyIncome -
+    AVG(MonthlyIncome) OVER (
+        PARTITION BY Department
+    ),
+    2
+) AS salary_difference
+
+FROM employees;
+
+Q4. Find top 10% earners.
+
+WITH ranked AS (
+SELECT
+*,
+NTILE(10) OVER (
+ORDER BY MonthlyIncome DESC
+) AS income_decile
+FROM employees
+)
+
+SELECT *
+FROM ranked
+WHERE income_decile = 1;
+
+Q5. Calculate attrition rate by department.
+
+SELECT
+Department,
+COUNT(*) AS employees,
+
+SUM(
+    CASE
+        WHEN Attrition = 'Yes' THEN 1
+        ELSE 0
+    END
+) AS attrition_count,
+
+ROUND(
+    SUM(
+        CASE
+            WHEN Attrition = 'Yes' THEN 1
+            ELSE 0
+        END
+    ) * 100.0 / COUNT(*),
+    2
+) AS attrition_rate
+
+FROM employees
+GROUP BY Department
+ORDER BY attrition_rate DESC;
+
+Q6. Calculate attrition by job role.
+
+SELECT
+JobRole,
+COUNT(*) AS employees,
+
+ROUND(
+    SUM(CASE WHEN Attrition = 'Yes' THEN 1 ELSE 0 END)
+    * 100.0 / COUNT(*),
+    2
+) AS attrition_rate
+
+FROM employees
+GROUP BY JobRole
+ORDER BY attrition_rate DESC;
+
+Q7. Divide employees into four salary bands.
+
+WITH salary_bands AS (
+SELECT
+EmployeeNumber,
+Department,
+MonthlyIncome,
+
+    NTILE(4) OVER (
+        PARTITION BY Department
+        ORDER BY MonthlyIncome
+    ) AS salary_quartile
+
+FROM employees
+
+)
+
+SELECT
+*,
+CASE salary_quartile
+WHEN 1 THEN 'Bottom 25%'
+WHEN 2 THEN 'Lower Mid'
+WHEN 3 THEN 'Upper Mid'
+WHEN 4 THEN 'Top 25%'
+END AS salary_band
+
+FROM salary_bands;
+
+Q8. Find employees earning above their department average.
+
+WITH department_salary AS (
+SELECT
+*,
+AVG(MonthlyIncome) OVER (
+PARTITION BY Department
+) AS department_avg
+FROM employees
+)
+
+SELECT
+EmployeeNumber,
+Department,
+JobRole,
+MonthlyIncome,
+ROUND(department_avg, 2) AS department_avg
+FROM department_salary
+WHERE MonthlyIncome > department_avg
+ORDER BY Department, MonthlyIncome DESC;
+
+Q9. Find employees with more than 5 years at company and low performance.
+
+SELECT
+EmployeeNumber,
+Department,
+JobRole,
+YearsAtCompany,
+PerformanceRating
+FROM employees
+WHERE YearsAtCompany > 5
+AND PerformanceRating <= 2;
